@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#009688",  // Pink primary color
+            main: "#009688",  // teal primary color
             light: "#FF80AB",
             dark: "#C60055"
         },
