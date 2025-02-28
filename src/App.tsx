@@ -11,6 +11,10 @@ import CreateDoctor from './components/doctors/CreateDoctor'
 import CreateDepartment from './components/departments/CreateDepartment'
 import UpdateDoctor from './components/doctors/UpdateDoctor'
 import UpdateDepartment from './components/departments/UpdateDepartment'
+import Register from './auth/Register'
+import Login from './auth/login'
+import ProtectedRoute from './auth/ProtectedRoute'
+
 
 function App() {
 
@@ -23,10 +27,12 @@ function App() {
           <Route path="/" element={<LandingPage/>}/>
           <Route path="/doctor-index" element={<DoctorIndex/>}/>
           <Route path="/department-index" element={<DepartmentIndex/>}/>
-          <Route path="/create-doctor" element={<CreateDoctor/>}/>
-          <Route path="/create-department" element={<CreateDepartment/>}/>
-          <Route path="/update-doctor/:id" element={<UpdateDoctor/>}/>
-          <Route path="/update-department/:id" element={<UpdateDepartment/>}/>
+          <Route path="/create-doctor" element={<ProtectedRoute><CreateDoctor/></ProtectedRoute>}/>
+          <Route path="/create-department" element={<ProtectedRoute><CreateDepartment/></ProtectedRoute>}/>
+          <Route path="/update-doctor/:id" element={<ProtectedRoute><UpdateDoctor/></ProtectedRoute>}/>
+          <Route path="/update-department/:id" element={<ProtectedRoute><UpdateDepartment/></ProtectedRoute>}/>
+          <Route path="/register" element={<Register/>}/>
+          <Route path="/login" element={<Login/>}/>
       </Routes>
     </>
   )

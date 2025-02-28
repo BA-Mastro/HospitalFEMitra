@@ -17,10 +17,15 @@ const DoctorIndex = () => {
     const queryClient = useQueryClient()
     const navigate = useNavigate();
     const paginationModel = {page:0, pageSize:25}
+    const token = sessionStorage.getItem("Authorization");
 
     const deleteDepartmentById = async (id: number) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/department/${id}`)
+            const response = await axios.delete(`http://localhost:8080/api/department/${id}`,{
+                headers: {
+                    "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`
+                }
+            });
             return response.status; // Return status on success
         } catch (error: any) {
             if (error.response?.status === 403) {
@@ -66,32 +71,36 @@ const DoctorIndex = () => {
             headerName:"Floor Number",
             minWidth:100,
             flex:1
-        },
-        {
-            field: 'actions',
-            headerName: "Actions",
-            minWidth: 120,
-            flex: 1,
-            renderCell:(param) => (
-                <Stack direction ="row" spacing ={1}>
-                    <IconButton
-                        size ="small"
-                        onClick={() => navigate ("/update-department/"+param.row.id, {state:param.row})}
-                        color = "inherit"
-                        >
-                            <Edit fontSize = "small"/>
-                    </IconButton>
-                    <IconButton
-                        size="small"
-                        onClick={() => handleDelete(param.row)}
-                        color="error"
-                        >
-                        <Delete fontSize="small" />
-                    </IconButton>
-                </Stack>
-            )
         }
     ];
+    if(token != null){
+        columns.push(
+            {
+                field: 'actions',
+                headerName: "Actions",
+                minWidth: 120,
+                flex: 1,
+                renderCell:(param) => (
+                    <Stack direction ="row" spacing ={1}>
+                        <IconButton
+                            size ="small"
+                            onClick={() => navigate ("/update-department/"+param.row.id, {state:param.row})}
+                            color = "inherit"
+                            >
+                                <Edit fontSize = "small"/>
+                        </IconButton>
+                        <IconButton
+                            size="small"
+                            onClick={() => handleDelete(param.row)}
+                            color="error"
+                            >
+                            <Delete fontSize="small" />
+                        </IconButton>
+                    </Stack>
+                )
+            }
+        )
+    }
     const getAllDepartment = async() =>{
         const request = await axios.get("http://localhost:8080/api/department/all")
         const response= await request.data
@@ -128,26 +137,28 @@ const DoctorIndex = () => {
                 sx={{ border: 0 }}
                 />
             </Paper>
-            <Box sx={{ display: "flex", justifyContent: "flex-start", width: "100%", mb: 2 }}>
-                <Button
-                    component={Link}
-                    to="/create-department"
-                    variant="contained"
-                    sx={{
-                        backgroundColor: "#009688", // Teal button
-                        color: "white",
-                        textTransform: "none",
-                        fontSize: "1rem",
-                        margin:"20px",
-                        borderRadius: "8px",
-                        "&:hover": {
-                            backgroundColor: "white" // white on hover
-                        }
-                    }}
-                >
-                    Register a new Department
-                </Button>
-            </Box> 
+            { token?.length || 0 > 0 && (
+                <Box sx={{ display: "flex", justifyContent: "flex-start", width: "100%", mb: 2 }}>
+                    <Button
+                        component={Link}
+                        to="/create-department"
+                        variant="contained"
+                        sx={{
+                            backgroundColor: "#009688", // Teal button
+                            color: "white",
+                            textTransform: "none",
+                            fontSize: "1rem",
+                            margin:"20px",
+                            borderRadius: "8px",
+                            "&:hover": {
+                                backgroundColor: "white" // white on hover
+                            }
+                        }}
+                    >
+                        Register a new Department
+                    </Button>
+                </Box> 
+            )}
             <Dialog open={deleteDialog} onClose= {() => setDeleteDialog(false)}>
                        <DialogTitle>
                             Confirm Delete
