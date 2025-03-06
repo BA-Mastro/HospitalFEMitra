@@ -23,7 +23,11 @@ const CreateDepartment =() => {
 
     const { mutate } = useMutation({
         mutationFn: async (data: Department) => {
-            const response = await axios.post("http://localhost:8080/api/department/create", data);
+            const response = await axios.post("http://localhost:8080/api/department/create", data,{
+                headers: {
+                    "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`
+                }
+            });
             return response.data;
         },
         onSuccess: () => {
@@ -32,8 +36,16 @@ const CreateDepartment =() => {
             navigate("/department-index");
         },
         onError: (error) => {
-            console.error("Error:", error);
-            alert("Something went wrong: " + (error.response?.data?.message || error.message));
+            if (error.response?.status === 403) {
+                alert("Unauthorized to delete. Only Department users have access")
+                navigate("/department-index");
+                throw new Error("Unauthorized access. You do not have permission to delete this car.");
+            }
+            else{
+                console.error("Error:", error);
+                alert("Something went wrong: " + (error.response?.data?.message || error.message));
+                return <p>Error fetching Departments list: {error.message}</p>;
+            }
         }
     });
     const formik = useFormik({

@@ -32,12 +32,12 @@ export default function Register() {
                 if (response.status !== 201) {
                     throw new Error("Something went wrong with the register, please try again later!");
                 }
-                navigate("/");
+                navigate("/login");
             } catch (error: any) {
-                console.error("Error during registration.", error); // ✅ Logs error to console
-                alert(error.message+". Username has been taken. Try again."); // ✅ Displays error message
+                console.error("Error during registration.", error); // Logs error to console
+                alert(error.message+". Username has been taken. Try again."); //Displays error message
             } finally {
-                setSubmitting(false); // ✅ Ensures submit button resets after request
+                setSubmitting(false); // Ensures submit button resets after request
             }
         }
     });

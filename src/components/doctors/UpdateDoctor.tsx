@@ -46,7 +46,11 @@ const UpdateDoctor=()=> {
 
     const { mutate } = useMutation({
         mutationFn: async (data: Doctor) => {
-            const response = await axios.put("http://localhost:8080/api/doctor/"+doctor_id, data);
+            const response = await axios.put("http://localhost:8080/api/doctor/"+doctor_id, data,{
+                headers: {
+                    "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`
+                }
+            });
             return response.data;
         },
         onSuccess: () => {
@@ -55,6 +59,11 @@ const UpdateDoctor=()=> {
             navigate("/doctor-index");
         },
         onError: (error) => {
+            if (error.response?.status === 403) {
+                alert("Unauthorized to delete. Only Department users have acces.")
+                navigate("/doctor-index");
+                throw new Error("Unauthorized access. You do not have permission to delete this car.");
+            }
             console.error("Error:", error);
             alert("Something went wrong: " + (error.response?.data?.message || error.message));
         }

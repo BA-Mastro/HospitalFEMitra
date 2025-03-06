@@ -18,6 +18,9 @@ const DoctorIndex = () => {
     const navigate = useNavigate();
     const paginationModel = {page:0, pageSize:25}
     const token = sessionStorage.getItem("Authorization");
+    // if (!token) {
+    //     throw new Error("No authentication token found. Please log in.");
+    // }
 
     const deleteDepartmentById = async (id: number) => {
         try {
@@ -137,7 +140,7 @@ const DoctorIndex = () => {
                 sx={{ border: 0 }}
                 />
             </Paper>
-            { token?.length || 0 > 0 && (
+            { token?.length > 0 && (
                 <Box sx={{ display: "flex", justifyContent: "flex-start", width: "100%", mb: 2 }}>
                     <Button
                         component={Link}

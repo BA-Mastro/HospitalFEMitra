@@ -25,7 +25,7 @@ const DoctorIndex = () => {
             return response.status; // Return status on success
         } catch (error: any) {
             if (error.response?.status === 403) {
-                alert("Unauthorized to delete")
+                alert("Unauthorized to delete. Only Department users have access.")
                 throw new Error("Unauthorized access. You do not have permission to delete this car.");
             }
             
@@ -152,7 +152,7 @@ const DoctorIndex = () => {
                     sx={{ border: 0 }}
                     />
                 </Paper>
-                { token?.length || 0 > 0 && (
+                { token?.length > 0 && (
                     <Box sx={{ display: "flex", justifyContent: "flex-start", width: "100%", mb: 2 }}>
                             <Button
                                 component={Link}
